@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #17365d;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #17365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #17365d;
+            color: white;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .delete-button {
+            background: #b02a37;
+        }
+		
+		/* Header layout */
+		.header-top {
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    gap: 20px;
+		    flex-wrap: wrap;
+		}
+
+		header h1 {
+		    margin-bottom: 8px;
+		}
+
+		.header-subtitle {
+		    margin: 0;
+		    color: #dbeafe;
+		    font-size: 14px;
+		}
+
+		/* Logged-in user information */
+		.user-panel {
+		    display: flex;
+		    align-items: center;
+		    gap: 18px;
+		    flex-wrap: wrap;
+		}
+
+		.user-info {
+		    display: flex;
+		    align-items: center;
+		    gap: 8px;
+		    flex-wrap: wrap;
+		}
+
+		.welcome-text {
+		    color: #dbeafe;
+		}
+
+		.role-badge {
+		    background: #dbeafe;
+		    color: #17365d;
+		    padding: 5px 9px;
+		    border-radius: 20px;
+		    font-size: 11px;
+		    font-weight: bold;
+		}
+
+		/* Logout button */
+		.logout-button {
+		    background: #dc3545;
+		    color: white;
+		    border: none;
+		    padding: 10px 17px;
+		    border-radius: 6px;
+		    font-weight: bold;
+		    cursor: pointer;
+		}
+
+		.logout-button:hover {
+		    background: #b91c1c;
+		}
+
+		/* Navigation */
+		.main-nav {
+		    display: flex;
+		    flex-wrap: wrap;
+		    gap: 10px;
+		    margin-top: 22px;
+		}
+
+		.main-nav a {
+		    color: white;
+		    text-decoration: none;
+		    font-weight: bold;
+		    padding: 9px 13px;
+		    border-radius: 6px;
+		}
+
+		.main-nav a:hover {
+		    background: #285080;
+		    text-decoration: none;
+		}
+
+		/* Small-screen layout */
+		@media (max-width: 600px) {
+		    .header-top {
+		        align-items: flex-start;
+		    }
+
+		    .user-panel {
+		        width: 100%;
+		        justify-content: space-between;
+		    }
+
+		    .main-nav {
+		        gap: 5px;
+		    }
+
+		    .main-nav a {
+		        padding: 8px;
+		        font-size: 13px;
+		    }
+		}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Courier Management System</h1>
+
+    <h2>Customer Management</h2>
+
+    <div th:if="${successMessage}"
+         class="message success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="message error"
+         th:text="${errorMessage}">
+    </div>
+
+    <a th:href="@{/customers/new}" class="button">
+        + Add New Customer
+    </a>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr th:each="customer : ${customers}">
+
+                <td th:text="${customer.id}"></td>
+                <td th:text="${customer.name}"></td>
+                <td th:text="${customer.email}"></td>
+                <td th:text="${customer.phone}"></td>
+                <td th:text="${customer.address}"></td>
+
+                <td>
+                    <div class="actions">
+
+                        <a th:href="@{/customers/edit/{id}(id=${customer.id})}"
+                           class="button">
+                            Edit
+                        </a>
+
+                        <form th:action="@{/customers/delete/{id}(id=${customer.id})}"
+                              method="post">
+
+                            <button type="submit"
+                                    class="button delete-button"
+                                    onclick="return confirm('Delete this customer?')">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(customers)}">
+                <td colspan="6">No customers registered yet.</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

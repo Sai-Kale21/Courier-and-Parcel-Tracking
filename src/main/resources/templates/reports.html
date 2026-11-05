@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parcel Reports</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #243247;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 22px 5%;
+        }
+
+        header h1 {
+            margin: 0 0 16px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        .panel h2 {
+            margin-top: 0;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd5e0;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            border: none;
+            border-radius: 6px;
+            padding: 11px 18px;
+            background: #2878d0;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background: #185ca7;
+        }
+
+        .reset {
+            background: #64748b;
+        }
+
+        .reset:hover {
+            background: #475569;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        th {
+            background: #edf3fa;
+            color: #17365d;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #e7eef8;
+            color: #17365d;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+        }
+
+        @media (max-width: 900px) {
+            .filter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                width: 94%;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+        }
+		/* Header layout */
+				.header-top {
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				    gap: 20px;
+				    flex-wrap: wrap;
+				}
+
+				header h1 {
+				    margin-bottom: 8px;
+				}
+
+				.header-subtitle {
+				    margin: 0;
+				    color: #dbeafe;
+				    font-size: 14px;
+				}
+
+				/* Logged-in user information */
+				.user-panel {
+				    display: flex;
+				    align-items: center;
+				    gap: 18px;
+				    flex-wrap: wrap;
+				}
+
+				.user-info {
+				    display: flex;
+				    align-items: center;
+				    gap: 8px;
+				    flex-wrap: wrap;
+				}
+
+				.welcome-text {
+				    color: #dbeafe;
+				}
+
+				.role-badge {
+				    background: #dbeafe;
+				    color: #17365d;
+				    padding: 5px 9px;
+				    border-radius: 20px;
+				    font-size: 11px;
+				    font-weight: bold;
+				}
+
+				/* Logout button */
+				.logout-button {
+				    background: #dc3545;
+				    color: white;
+				    border: none;
+				    padding: 10px 17px;
+				    border-radius: 6px;
+				    font-weight: bold;
+				    cursor: pointer;
+				}
+
+				.logout-button:hover {
+				    background: #b91c1c;
+				}
+
+				/* Navigation */
+				.main-nav {
+				    display: flex;
+				    flex-wrap: wrap;
+				    gap: 10px;
+				    margin-top: 22px;
+				}
+
+				.main-nav a {
+				    color: white;
+				    text-decoration: none;
+				    font-weight: bold;
+				    padding: 9px 13px;
+				    border-radius: 6px;
+				}
+
+				.main-nav a:hover {
+				    background: #285080;
+				    text-decoration: none;
+				}
+
+				/* Small-screen layout */
+				@media (max-width: 600px) {
+				    .header-top {
+				        align-items: flex-start;
+				    }
+
+				    .user-panel {
+				        width: 100%;
+				        justify-content: space-between;
+				    }
+
+				    .main-nav {
+				        gap: 5px;
+				    }
+
+				    .main-nav a {
+				        padding: 8px;
+				        font-size: 13px;
+				    }
+				}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Courier &amp; Parcel Tracking System</h1>
+
+    <nav>
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/customers}">Customers</a>
+        <a th:href="@{/parcels}">Parcels</a>
+        <a th:href="@{/parcels/new}">Book Parcel</a>
+        <a th:href="@{/track}">Track Parcel</a>
+        <a th:href="@{/reports}">Reports</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="panel">
+        <h2>Advanced Parcel Search</h2>
+        <p>Filter parcel bookings using one or more criteria.</p>
+
+        <div class="error"
+             th:if="${errorMessage != null}"
+             th:text="${errorMessage}">
+        </div>
+
+        <form th:action="@{/reports}" method="get">
+
+            <div class="filter-grid">
+
+                <div class="field">
+                    <label for="trackingNumber">Tracking Number</label>
+                    <input type="text"
+                           id="trackingNumber"
+                           name="trackingNumber"
+                           placeholder="Enter tracking number"
+                           th:value="${trackingNumber}">
+                </div>
+
+                <div class="field">
+                    <label for="status">Parcel Status</label>
+
+                    <select id="status" name="status">
+                        <option value="">All Statuses</option>
+
+                        <option th:each="item : ${statuses}"
+                                th:value="${item}"
+                                th:text="${#strings.replace(item.name(), '_', ' ')}"
+                                th:selected="${selectedStatus == item}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="courierType">Courier Type</label>
+
+                    <select id="courierType" name="courierType">
+                        <option value="">All Types</option>
+
+                        <option th:each="item : ${courierTypes}"
+                                th:value="${item}"
+                                th:text="${item}"
+                                th:selected="${selectedCourierType == item}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="fromDate">From Date</label>
+                    <input type="date"
+                           id="fromDate"
+                           name="fromDate"
+                           th:value="${fromDate}">
+                </div>
+
+                <div class="field">
+                    <label for="toDate">To Date</label>
+                    <input type="date"
+                           id="toDate"
+                           name="toDate"
+                           th:value="${toDate}">
+                </div>
+
+            </div>
+
+			<div class="actions">
+
+			    <button type="submit" class="button">
+			        Search / Filter
+			    </button>
+
+			    <a th:href="@{/reports}" class="button reset">
+			        Reset Filters
+			    </a>
+
+			    <a class="button"
+			       style="background: #16803c;"
+			       th:href="@{/reports/excel(
+			           trackingNumber=${trackingNumber},
+			           status=${selectedStatus},
+			           courierType=${selectedCourierType},
+			           fromDate=${fromDate},
+			           toDate=${toDate})}">
+			        Export Excel
+			    </a>
+			
+				<a class="button"
+				   style="background: #c62828;"
+				   th:href="@{/reports/pdf(
+				       trackingNumber=${trackingNumber},
+				       status=${selectedStatus},
+				       courierType=${selectedCourierType},
+				       fromDate=${fromDate},
+				       toDate=${toDate})}">
+				    Export PDF
+				</a>
+			</div>
+
+        </form>
+    </section>
+
+    <section class="panel">
+
+        <h2>Parcel Report Results</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tracking Number</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
+                        <th>Booking Date</th>
+                        <th>Courier Type</th>
+                        <th>Charge</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="parcel : ${parcels}">
+
+                        <td th:text="${parcel.trackingNumber}"></td>
+
+                        <td th:text="${parcel.sender.name}"></td>
+
+                        <td th:text="${parcel.receiverName}"></td>
+
+                        <td th:text="${#temporals.format(parcel.bookingDate, 'dd-MM-yyyy HH:mm')}"></td>
+
+                        <td th:text="${parcel.courierType}"></td>
+
+                        <td th:text="${'₹ ' + parcel.charge}"></td>
+
+                        <td>
+                            <span class="status"
+                                  th:text="${#strings.replace(parcel.status.name(), '_', ' ')}">
+                            </span>
+                        </td>
+
+                        <td>
+                            <a class="button"
+                               th:href="@{/parcels/{id}(id=${parcel.id})}">
+                                View
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(parcels)}">
+                        <td colspan="8" class="empty">
+                            No parcels match the selected filters.
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Courier &amp; Parcel Tracking Management System
+</footer>
+
+</body>
+</html>

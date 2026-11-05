@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Staff Form</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #243247;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 20px 5%;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 35px auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #2878d0;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .cancel {
+            background: #64748b;
+        }
+
+        .error {
+            color: #b91c1c;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .alert {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Courier &amp; Parcel Tracking System</h1>
+</header>
+
+<main class="container">
+
+    <section class="panel">
+
+        <h2 th:text="${formTitle}">Register Delivery Staff</h2>
+
+        <div class="alert"
+             th:if="${errorMessage}"
+             th:text="${errorMessage}">
+        </div>
+
+        <form th:action="${formAction}"
+              th:object="${staff}"
+              method="post">
+
+            <div class="field">
+                <label for="fullName">Full Name</label>
+                <input id="fullName"
+                       type="text"
+                       th:field="*{fullName}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('fullName')}"
+                     th:errors="*{fullName}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone"
+                       type="tel"
+                       th:field="*{phone}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('phone')}"
+                     th:errors="*{phone}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email"
+                       type="email"
+                       th:field="*{email}"
+                       required>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="address">Address</label>
+                <textarea id="address"
+                          th:field="*{address}"
+                          required></textarea>
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('address')}"
+                     th:errors="*{address}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="vehicleNumber">Vehicle Number</label>
+                <input id="vehicleNumber"
+                       type="text"
+                       th:field="*{vehicleNumber}">
+
+                <div class="error"
+                     th:if="${#fields.hasErrors('vehicleNumber')}"
+                     th:errors="*{vehicleNumber}">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="joiningDate">Joining Date</label>
+                <input id="joiningDate"
+                       type="date"
+                       th:field="*{joiningDate}">
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="button">Save Staff</button>
+
+                <a th:href="@{/delivery-staff}"
+                   class="button cancel">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

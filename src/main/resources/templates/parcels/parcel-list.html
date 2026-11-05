@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parcel Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #17365d;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #17365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #17365d;
+            color: white;
+        }
+
+        .message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+		/* Header layout */
+				.header-top {
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				    gap: 20px;
+				    flex-wrap: wrap;
+				}
+
+				header h1 {
+				    margin-bottom: 8px;
+				}
+
+				.header-subtitle {
+				    margin: 0;
+				    color: #dbeafe;
+				    font-size: 14px;
+				}
+
+				/* Logged-in user information */
+				.user-panel {
+				    display: flex;
+				    align-items: center;
+				    gap: 18px;
+				    flex-wrap: wrap;
+				}
+
+				.user-info {
+				    display: flex;
+				    align-items: center;
+				    gap: 8px;
+				    flex-wrap: wrap;
+				}
+
+				.welcome-text {
+				    color: #dbeafe;
+				}
+
+				.role-badge {
+				    background: #dbeafe;
+				    color: #17365d;
+				    padding: 5px 9px;
+				    border-radius: 20px;
+				    font-size: 11px;
+				    font-weight: bold;
+				}
+
+				/* Logout button */
+				.logout-button {
+				    background: #dc3545;
+				    color: white;
+				    border: none;
+				    padding: 10px 17px;
+				    border-radius: 6px;
+				    font-weight: bold;
+				    cursor: pointer;
+				}
+
+				.logout-button:hover {
+				    background: #b91c1c;
+				}
+
+				/* Navigation */
+				.main-nav {
+				    display: flex;
+				    flex-wrap: wrap;
+				    gap: 10px;
+				    margin-top: 22px;
+				}
+
+				.main-nav a {
+				    color: white;
+				    text-decoration: none;
+				    font-weight: bold;
+				    padding: 9px 13px;
+				    border-radius: 6px;
+				}
+
+				.main-nav a:hover {
+				    background: #285080;
+				    text-decoration: none;
+				}
+
+				/* Small-screen layout */
+				@media (max-width: 600px) {
+				    .header-top {
+				        align-items: flex-start;
+				    }
+
+				    .user-panel {
+				        width: 100%;
+				        justify-content: space-between;
+				    }
+
+				    .main-nav {
+				        gap: 5px;
+				    }
+
+				    .main-nav a {
+				        padding: 8px;
+				        font-size: 13px;
+				    }
+				}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Courier and Parcel Tracking</h1>
+    <h2>Parcel Management</h2>
+	
+	<div th:if="${successMessage}"
+	     th:text="${successMessage}"
+	     style="padding: 12px; margin-bottom: 15px;
+	            background: #dcfce7; color: #166534;
+	            border-radius: 5px;">
+	</div>
+
+	<div th:if="${errorMessage}"
+	     th:text="${errorMessage}"
+	     style="padding: 12px; margin-bottom: 15px;
+	            background: #fee2e2; color: #991b1b;
+	            border-radius: 5px;">
+	</div>
+
+    <div th:if="${successMessage}"
+         class="message success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="message error"
+         th:text="${errorMessage}">
+    </div>
+
+    <a th:href="@{/parcels/new}" class="button">
+        + Book New Parcel
+    </a>
+	<a th:href="@{/track}" class="button">
+	    Track Parcel
+	</a>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tracking Number</th>
+                <th>Sender</th>
+                <th>Receiver</th>
+                <th>Weight (kg)</th>
+                <th>Courier Type</th>
+                <th>Charge</th>
+                <th>Status</th>
+                <th>Booking Date</th>
+                <th>Action</th>
+				<th>Assigned Staff</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr th:each="parcel : ${parcels}">
+
+                <td th:text="${parcel.id}"></td>
+
+                <td th:text="${parcel.trackingNumber}"></td>
+
+                <td th:text="${parcel.sender.name}"></td>
+
+                <td th:text="${parcel.receiverName}"></td>
+
+                <td th:text="${parcel.weight}"></td>
+
+                <td th:text="${parcel.courierType}"></td>
+
+                <td th:text="${'₹' + parcel.charge}"></td>
+
+                <td class="status" th:text="${parcel.status}"></td>
+
+                <td th:text="${#temporals.format(parcel.bookingDate, 'dd-MM-yyyy HH:mm')}"></td>
+
+                <td>
+					<a th:href="@{/parcels/view/{id}(id=${parcel.id})}"
+					   class="btn btn-primary">
+					    View
+					</a>
+					<a th:href="@{/parcels/status/{id}(id=${parcel.id})}"
+					   class="button">
+					    Update Status
+					</a>
+					<a th:href="@{/parcels/{id}/assign(id=${parcel.id})}"
+					sec:authorize="hasRole('ADMIN')"
+					class="btn btn-primary"> <span th:if="${parcel.assignedStaff == null}">
+					Assign Staff </span>
+					<span th:if="${parcel.assignedStaff != null}">
+					    Reassign Staff
+					</span>
+					</a>
+                </td>
+				
+				<td>
+				    <span th:if="${parcel.assignedStaff != null}"
+				          th:text="${parcel.assignedStaff.fullName}">
+				    </span>
+				<span th:if="${parcel.assignedStaff == null}"
+				      style="color: #dc2626;">
+				    Not Assigned
+				</span>
+				</td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(parcels)}">
+                <td colspan="10">No parcels have been booked yet.</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

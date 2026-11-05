@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Staff Management</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #243247;
+        }
+
+        header {
+            background: #17365d;
+            color: white;
+            padding: 22px 5%;
+        }
+
+        header h1 {
+            margin-top: 0;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 30px auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5eaf0;
+        }
+
+        th {
+            background: #edf3fa;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 9px 13px;
+            background: #2878d0;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .danger {
+            background: #dc3545;
+        }
+
+        .success {
+            background: #16803c;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Courier &amp; Parcel Tracking System</h1>
+
+    <nav>
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/customers}">Customers</a>
+        <a th:href="@{/parcels}">Parcels</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a th:href="@{/delivery-staff}">Delivery Staff</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="panel">
+
+        <div class="toolbar">
+            <div>
+                <h2>Delivery Staff Management</h2>
+                <p>Register and manage delivery personnel.</p>
+            </div>
+
+            <a class="button"
+               th:href="@{/delivery-staff/new}">
+                + Register Staff
+            </a>
+        </div>
+
+        <div class="success"
+             th:if="${successMessage}"
+             th:text="${successMessage}">
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Vehicle Number</th>
+                        <th>Joining Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="staff : ${staffList}">
+
+                        <td th:text="${staff.id}"></td>
+                        <td th:text="${staff.fullName}"></td>
+                        <td th:text="${staff.phone}"></td>
+                        <td th:text="${staff.email}"></td>
+                        <td th:text="${staff.vehicleNumber ?: '-'}"></td>
+                        <td th:text="${staff.joiningDate ?: '-'}"></td>
+
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${staff.active} ? ' active' : ' inactive'"
+                                  th:text="${staff.active} ? 'Active' : 'Inactive'">
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+
+                                <a class="button"
+                                   th:href="@{/delivery-staff/edit/{id}(id=${staff.id})}">
+                                    Edit
+                                </a>
+
+                                <form th:action="@{/delivery-staff/toggle-active/{id}(id=${staff.id})}"
+                                      method="post">
+
+                                    <button type="submit"
+                                            class="button"
+                                            th:classappend="${staff.active} ? ' danger' : ''"
+                                            th:text="${staff.active} ? 'Deactivate' : 'Activate'">
+                                    </button>
+
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(staffList)}">
+                        <td colspan="8">No delivery staff registered yet.</td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

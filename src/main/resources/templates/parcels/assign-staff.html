@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Assign Delivery Staff</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 30px 15px;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+    }
+
+    .container {
+        max-width: 650px;
+        margin: 30px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #243b64;
+        text-align: center;
+    }
+
+    .parcel-info {
+        padding: 18px;
+        margin-bottom: 25px;
+        background: #f0f4fa;
+        border-radius: 7px;
+        line-height: 1.8;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 15px;
+        background: white;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 11px 18px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .assign-button {
+        background: #2563eb;
+        color: white;
+    }
+
+    .assign-button:hover {
+        background: #1d4ed8;
+    }
+
+    .cancel-button {
+        margin-left: 8px;
+        background: #e5e7eb;
+        color: #333;
+    }
+
+    .message {
+        padding: 12px;
+        margin-bottom: 18px;
+        border-radius: 5px;
+    }
+
+    .error {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .current-assignment {
+        margin-bottom: 20px;
+        padding: 12px;
+        border: 1px solid #bbf7d0;
+        border-radius: 5px;
+        background: #f0fdf4;
+    }
+
+    .no-staff {
+        padding: 15px;
+        background: #fff7ed;
+        border-radius: 5px;
+        color: #9a3412;
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 20px;
+        }
+
+        .button {
+            margin-bottom: 8px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Assign Delivery Staff</h2>
+
+<div th:if="${errorMessage}"
+     class="message error"
+     th:text="${errorMessage}">
+</div>
+
+<div class="parcel-info">
+    <strong>Tracking Number:</strong>
+    <span th:text="${parcel.trackingNumber}"></span>
+    <br>
+
+    <strong>Receiver:</strong>
+    <span th:text="${parcel.receiverName}"></span>
+    <br>
+
+    <strong>Delivery Address:</strong>
+    <span th:text="${parcel.deliveryAddress}"></span>
+    <br>
+
+    <strong>Current Status:</strong>
+    <span th:text="${parcel.status}"></span>
+</div>
+
+<div class="current-assignment"
+     th:if="${parcel.assignedStaff != null}">
+
+    <strong>Currently Assigned To:</strong>
+    <span th:text="${parcel.assignedStaff.fullName}"></span>
+
+    <br>
+
+    <strong>Phone:</strong>
+    <span th:text="${parcel.assignedStaff.phone}"></span>
+
+</div>
+
+<div th:if="${#lists.isEmpty(deliveryStaffList)}"
+     class="no-staff">
+
+    <strong>No active delivery staff available.</strong>
+
+    <p>
+        Register a delivery staff member or activate an existing
+        staff member before assigning this parcel.
+    </p>
+
+    <a th:href="@{/delivery-staff}" class="button assign-button">
+        Manage Delivery Staff
+    </a>
+
+</div>
+
+<form th:if="${!#lists.isEmpty(deliveryStaffList)}"
+      th:action="@{/parcels/{id}/assign(id=${parcel.id})}"
+      method="post">
+
+    <div class="form-group">
+
+        <label for="staffId">Select Delivery Staff</label>
+
+        <select id="staffId" name="staffId" required>
+
+            <option value="">-- Select Staff Member --</option>
+
+            <option th:each="staff : ${deliveryStaffList}"
+                    th:value="${staff.id}"
+                    th:text="${staff.fullName + ' - ' + staff.phone}"
+                    th:selected="${parcel.assignedStaff != null
+                        and parcel.assignedStaff.id == staff.id}">
+            </option>
+
+        </select>
+
+    </div>
+
+    <button type="submit" class="button assign-button">
+        Confirm Assignment
+    </button>
+
+    <a th:href="@{/parcels}" class="button cancel-button">
+        Cancel
+    </a>
+
+</form>
+
+</div>
+
+</body>
+</html>

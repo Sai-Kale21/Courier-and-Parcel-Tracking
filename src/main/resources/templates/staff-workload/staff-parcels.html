@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Assigned Parcels</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 25px;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+        color: #243b64;
+    }
+
+    .staff-info {
+        background: #eef2ff;
+        padding: 18px;
+        border-radius: 7px;
+        margin: 20px 0;
+        line-height: 1.8;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 13px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+        background: #eef2ff;
+        color: #243b64;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 9px 13px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 13px;
+        margin: 3px;
+    }
+
+    .primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    .secondary {
+        background: #e5e7eb;
+        color: #333;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 25px;
+        color: #666;
+    }
+
+    .status {
+        font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+        body {
+            padding: 12px;
+        }
+
+        .container {
+            padding: 15px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Assigned Parcels</h1>
+
+<div class="staff-info">
+
+    <strong>Staff ID:</strong>
+    <span th:text="${staff.id}"></span>
+    <br>
+
+    <strong>Name:</strong>
+    <span th:text="${staff.fullName}"></span>
+    <br>
+
+    <strong>Phone:</strong>
+    <span th:text="${staff.phone}"></span>
+    <br>
+
+    <strong>Vehicle Number:</strong>
+    <span th:text="${staff.vehicleNumber != null
+        and !#strings.isEmpty(staff.vehicleNumber)
+        ? staff.vehicleNumber : 'Not Provided'}">
+    </span>
+    <br>
+
+    <strong>Total Assigned Parcels:</strong>
+    <span th:text="${#lists.size(staffParcels)}"></span>
+
+</div>
+
+<a th:href="@{/staff-workload}"
+   class="button secondary">
+    Back to Workload Dashboard
+</a>
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+        <tr>
+            <th>Tracking Number</th>
+            <th>Receiver</th>
+            <th>Delivery Address</th>
+            <th>Courier Type</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="parcel : ${staffParcels}">
+
+            <td th:text="${parcel.trackingNumber}"></td>
+
+            <td th:text="${parcel.receiverName}"></td>
+
+            <td th:text="${parcel.deliveryAddress}"></td>
+
+            <td th:text="${parcel.courierType}"></td>
+
+            <td th:text="${parcel.bookingDate != null
+                ? #temporals.format(parcel.bookingDate, 'dd-MM-yyyy HH:mm')
+                : 'Not Available'}">
+            </td>
+
+            <td class="status"
+                th:text="${parcel.status}">
+            </td>
+
+            <td>
+
+				<a th:href="@{/parcels/view/{id}(id=${parcel.id})}"
+				   class="button primary">
+				    View Details
+				</a>
+
+            </td>
+
+        </tr>
+
+        <tr th:if="${#lists.isEmpty(staffParcels)}">
+
+            <td colspan="7" class="empty-message">
+                No parcels are currently assigned to this staff member.
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
+
+</body>
+</html>

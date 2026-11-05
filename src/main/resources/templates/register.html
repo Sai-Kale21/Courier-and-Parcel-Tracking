@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customer Registration</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 25px 15px;
+        font-family: Arial, sans-serif;
+        background: #f3f6fa;
+        color: #243247;
+    }
+
+    .container {
+        max-width: 550px;
+        margin: 25px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+        margin-top: 0;
+        color: #17365d;
+        text-align: center;
+    }
+
+    .subtitle {
+        margin-bottom: 25px;
+        color: #66758a;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: bold;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid #ccd5e0;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    input:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #2878d0;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 75px;
+    }
+
+    .button {
+        width: 100%;
+        padding: 12px;
+        background: #2878d0;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background: #185ca7;
+    }
+
+    .message {
+        padding: 12px;
+        margin-bottom: 18px;
+        border-radius: 6px;
+    }
+
+    .error {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .links {
+        margin-top: 20px;
+        text-align: center;
+        line-height: 1.8;
+    }
+
+    a {
+        color: #2878d0;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .hint {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #66758a;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Create Customer Account</h1>
+
+<p class="subtitle">
+    Register to book and track your parcels.
+</p>
+
+<div th:if="${errorMessage}"
+     class="message error"
+     th:text="${errorMessage}">
+</div>
+
+<form th:action="@{/register}" method="post">
+
+    <!-- Customer information -->
+
+    <div class="form-group">
+        <label for="name">Full Name</label>
+
+        <input type="text"
+               id="name"
+               name="name"
+               maxlength="100"
+               autocomplete="name"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email Address</label>
+
+        <input type="email"
+               id="email"
+               name="email"
+               maxlength="150"
+               autocomplete="email"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Mobile Number</label>
+
+        <input type="tel"
+               id="phone"
+               name="phone"
+               maxlength="20"
+               autocomplete="tel"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address</label>
+
+        <textarea id="address"
+                  name="address"
+                  maxlength="500"
+                  autocomplete="street-address"
+                  required></textarea>
+    </div>
+
+    <!-- Login information -->
+
+    <div class="form-group">
+        <label for="username">Username</label>
+
+        <input type="text"
+               id="username"
+               name="username"
+               minlength="3"
+               maxlength="50"
+               autocomplete="username"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+
+        <input type="password"
+               id="password"
+               name="password"
+               minlength="8"
+               maxlength="72"
+               autocomplete="new-password"
+               required>
+
+        <p class="hint">
+            Use at least 8 characters.
+        </p>
+    </div>
+
+    <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+
+        <input type="password"
+               id="confirmPassword"
+               name="confirmPassword"
+               minlength="8"
+               maxlength="72"
+               autocomplete="new-password"
+               required>
+    </div>
+
+    <button type="submit" class="button">
+        Register
+    </button>
+
+</form>
+
+<div class="links">
+    Already have an account?
+    <a th:href="@{/login}">Log in</a>
+    <br>
+
+    <a th:href="@{/track}">Track a Parcel</a>
+</div>
+
+</div>
+
+</body>
+</html>

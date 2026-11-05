@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Parcels</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #243247;
+        }
+
+        header {
+            background: #19385f;
+            color: white;
+            padding: 25px 5%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 22px;
+            padding: 17px 5%;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        nav a {
+            color: #19385f;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #2878d0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h2 {
+            margin-bottom: 8px;
+        }
+
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 9px;
+            border-left: 5px solid #2878d0;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            min-width: 180px;
+        }
+
+        .summary-card h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .summary-card .number {
+            font-size: 25px;
+            font-weight: bold;
+            color: #19385f;
+        }
+
+        .table-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #19385f;
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .tracking-number {
+            font-weight: bold;
+            color: #19385f;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            color: #334155;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .delivered {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .in-transit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 9px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .primary {
+            background: #2878d0;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #185ca7;
+        }
+
+        .secondary {
+            background: #475569;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 35px 15px;
+        }
+
+        .empty-state h3 {
+            color: #19385f;
+        }
+
+        .empty-state p {
+            color: #64748b;
+        }
+
+        .empty-state .button {
+            margin-top: 10px;
+        }
+
+        .logout-form {
+            display: inline;
+            margin-left: auto;
+        }
+
+        .logout-button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            background: #dc3545;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding: 0 12px;
+            }
+
+            .table-card {
+                padding: 12px;
+            }
+
+            th,
+            td {
+                padding: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>Courier &amp; Parcel Tracking System</h1>
+
+    <p>My Parcels</p>
+
+</header>
+
+<nav>
+
+    <a th:href="@{/customer-dashboard}">
+        Dashboard
+    </a>
+
+    <a th:href="@{/my-parcels}">
+        My Parcels
+    </a>
+
+    <a th:href="@{/track}">
+        Track Parcel
+    </a>
+
+    <form class="logout-form"
+          th:action="@{/logout}"
+          method="post">
+
+        <button type="submit" class="logout-button">
+            Logout
+        </button>
+
+    </form>
+
+</nav>
+
+<main class="container">
+
+    <section class="heading">
+
+        <h2>
+            My Parcel Bookings
+        </h2>
+
+        <p>
+            Welcome,
+            <strong th:text="${customer.name}">Customer</strong>.
+            Here you can view your parcel bookings and current statuses.
+        </p>
+
+    </section>
+
+    <section class="summary">
+
+        <div class="summary-card">
+
+            <h3>Total Parcels</h3>
+
+            <div class="number"
+                 th:text="${#lists.size(parcels)}">
+                0
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="table-card">
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>Tracking Number</th>
+                    <th>Receiver</th>
+                    <th>Receiver Phone</th>
+                    <th>Delivery Address</th>
+                    <th>Booking Date</th>
+                    <th>Courier Type</th>
+                    <th>Charge</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="parcel : ${parcels}">
+
+                    <td class="tracking-number"
+                        th:text="${parcel.trackingNumber}">
+                    </td>
+
+                    <td th:text="${parcel.receiverName}">
+                    </td>
+
+                    <td th:text="${parcel.receiverPhone}">
+                    </td>
+
+                    <td th:text="${parcel.deliveryAddress}">
+                    </td>
+
+                    <td th:text="${parcel.bookingDate != null
+                        ? #temporals.format(parcel.bookingDate, 'dd-MM-yyyy HH:mm')
+                        : 'Not Available'}">
+                    </td>
+
+                    <td th:text="${parcel.courierType}">
+                    </td>
+
+                    <td th:text="${'₹' + parcel.charge}">
+                    </td>
+
+                    <td>
+
+                        <span class="status"
+                              th:classappend="${parcel.status.name() == 'DELIVERED'
+                                  ? ' delivered'
+                                  : (parcel.status.name() == 'IN_TRANSIT'
+                                      or parcel.status.name() == 'OUT_FOR_DELIVERY'
+                                      ? ' in-transit'
+                                      : (parcel.status.name() == 'DELIVERY_FAILED'
+                                          or parcel.status.name() == 'CANCELLED'
+                                          ? ' failed' : ''))}"
+                              th:text="${parcel.status}">
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <a class="button primary"
+                           th:href="@{/track(trackingNumber=${parcel.trackingNumber})}">
+                            Track
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(parcels)}">
+
+                    <td colspan="9">
+
+                        <div class="empty-state">
+
+                            <h3>No Parcels Yet</h3>
+
+                            <p>
+                                You haven't booked any parcels using this account.
+                            </p>
+
+                            <p>
+                                Your parcel bookings will appear here.
+                            </p>
+
+                            <a th:href="@{/customer-dashboard}"
+                               class="button secondary">
+                                Back to Dashboard
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

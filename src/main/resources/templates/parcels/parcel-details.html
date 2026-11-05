@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parcel Details</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: #17365d;
+        }
+
+        .detail {
+            padding: 12px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .label {
+            font-weight: bold;
+            display: inline-block;
+            width: 190px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 16px;
+            background: #17365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+		/* Header layout */
+				.header-top {
+				    display: flex;
+				    justify-content: space-between;
+				    align-items: center;
+				    gap: 20px;
+				    flex-wrap: wrap;
+				}
+
+				header h1 {
+				    margin-bottom: 8px;
+				}
+
+				.header-subtitle {
+				    margin: 0;
+				    color: #dbeafe;
+				    font-size: 14px;
+				}
+
+				/* Logged-in user information */
+				.user-panel {
+				    display: flex;
+				    align-items: center;
+				    gap: 18px;
+				    flex-wrap: wrap;
+				}
+
+				.user-info {
+				    display: flex;
+				    align-items: center;
+				    gap: 8px;
+				    flex-wrap: wrap;
+				}
+
+				.welcome-text {
+				    color: #dbeafe;
+				}
+
+				.role-badge {
+				    background: #dbeafe;
+				    color: #17365d;
+				    padding: 5px 9px;
+				    border-radius: 20px;
+				    font-size: 11px;
+				    font-weight: bold;
+				}
+
+				/* Logout button */
+				.logout-button {
+				    background: #dc3545;
+				    color: white;
+				    border: none;
+				    padding: 10px 17px;
+				    border-radius: 6px;
+				    font-weight: bold;
+				    cursor: pointer;
+				}
+
+				.logout-button:hover {
+				    background: #b91c1c;
+				}
+
+				/* Navigation */
+				.main-nav {
+				    display: flex;
+				    flex-wrap: wrap;
+				    gap: 10px;
+				    margin-top: 22px;
+				}
+
+				.main-nav a {
+				    color: white;
+				    text-decoration: none;
+				    font-weight: bold;
+				    padding: 9px 13px;
+				    border-radius: 6px;
+				}
+
+				.main-nav a:hover {
+				    background: #285080;
+				    text-decoration: none;
+				}
+
+				/* Small-screen layout */
+				@media (max-width: 600px) {
+				    .header-top {
+				        align-items: flex-start;
+				    }
+
+				    .user-panel {
+				        width: 100%;
+				        justify-content: space-between;
+				    }
+
+				    .main-nav {
+				        gap: 5px;
+				    }
+
+				    .main-nav a {
+				        padding: 8px;
+				        font-size: 13px;
+				    }
+				}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Parcel Details</h1>
+
+    <div class="detail">
+        <span class="label">Tracking Number:</span>
+        <span th:text="${parcel.trackingNumber}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Sender:</span>
+        <span th:text="${parcel.sender.name}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Receiver:</span>
+        <span th:text="${parcel.receiverName}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Receiver Phone:</span>
+        <span th:text="${parcel.receiverPhone}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Pickup Address:</span>
+        <span th:text="${parcel.pickupAddress}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Delivery Address:</span>
+        <span th:text="${parcel.deliveryAddress}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Weight:</span>
+        <span th:text="${parcel.weight + ' kg'}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Courier Type:</span>
+        <span th:text="${parcel.courierType}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Courier Charge:</span>
+        <span th:text="${'₹' + parcel.charge}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Status:</span>
+        <span th:text="${parcel.status}"></span>
+    </div>
+
+    <div class="detail">
+        <span class="label">Booking Date:</span>
+        <span th:text="${#temporals.format(parcel.bookingDate, 'dd-MM-yyyy HH:mm')}"></span>
+    </div>
+	
+	<div class="delivery-staff-section">
+	<h3>Delivery Staff Information</h3>
+	<div th:if="${parcel.assignedStaff != null}">
+	    <p>
+	        <strong>Staff Name:</strong>
+	        <span th:text="${parcel.assignedStaff.fullName}"></span>
+	    </p>
+	    <p>
+	        <strong>Phone Number:</strong>
+	        <span th:text="${parcel.assignedStaff.phone}"></span>
+	    </p>
+	    <p>
+	        <strong>Email:</strong>
+	        <span th:text="${parcel.assignedStaff.email}"></span>
+	    </p>
+	    <p>
+	        <strong>Vehicle Number:</strong>
+	        <span th:text="${parcel.assignedStaff.vehicleNumber}"></span>
+	    </p>
+	</div>
+
+	<div th:if="${parcel.assignedStaff == null}">
+
+	    <p style="color: #dc2626;">
+	        No delivery staff has been assigned to this parcel yet.
+	    </p>
+
+	</div>
+
+	<a th:href="@{/parcels/{id}/assign(id=${parcel.id})}"
+	   sec:authorize="hasRole('ADMIN')"
+	   class="btn btn-primary">
+
+	    <span th:if="${parcel.assignedStaff == null}">
+	        Assign Staff
+	    </span>
+
+	    <span th:if="${parcel.assignedStaff != null}">
+	        Reassign Staff
+	    </span>
+	</a>
+	</div>
+
+    <a th:href="@{/parcels}" class="button">
+        Back to Parcels
+    </a>
+
+</div>
+
+</body>
+</html>

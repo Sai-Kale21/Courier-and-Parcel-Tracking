@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Courier & Parcel Tracking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #edf2f7;
+        }
+
+        .login-container {
+            width: 90%;
+            max-width: 420px;
+            padding: 35px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #17365d;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 22px;
+            background: #17365d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #24518a;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .public-link {
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        .public-link a {
+            color: #2878d0;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h1>Courier Tracking</h1>
+
+    <p class="subtitle">Sign in to your account</p>
+
+    <div class="message error"
+         th:if="${param.error}">
+        Invalid username or password.
+    </div>
+
+    <div class="message success"
+         th:if="${param.logout}">
+        You have logged out successfully.
+    </div>
+
+	<form th:action="@{/login}" method="post">
+
+	    <div>
+	        <label for="username">Username</label>
+
+	        <input type="text"
+	               id="username"
+	               name="username"
+	               autocomplete="username"
+	               required>
+	    </div>
+
+	    <div>
+	        <label for="password">Password</label>
+
+	        <input type="password"
+	               id="password"
+	               name="password"
+	               autocomplete="current-password"
+	               required>
+	    </div>
+
+	    <button type="submit">Login</button>
+
+	</form>
+	
+	<div class="registration-link">
+	    <p>New customer?</p>
+
+	    <a th:href="@{/register}">
+	        Create a Customer Account
+	    </a>
+	</div>
+
+    <div class="public-link">
+        <a th:href="@{/track}">Track a Parcel Without Login</a>
+    </div>
+
+</div>
+
+</body>
+</html>
